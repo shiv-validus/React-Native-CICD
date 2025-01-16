@@ -1,67 +1,49 @@
 # This file contains the fastlane.tools configuration
 # You can find the documentation at https://docs.fastlane.tools
-#
-# For a list of all available actions, check out
-#
-#     https://docs.fastlane.tools/actions
-#
-# For a list of all available plugins, check out
-#
-#     https://docs.fastlane.tools/plugins/available-plugins
-#
 
-# Uncomment the line if you want fastlane to automatically update itself
+# Uncomment the line if you want Fastlane to automatically update itself
 # update_fastlane
 
-# default_platform(:ios)
-
-# platform :ios do
-#   desc "Push a new beta build to TestFlight"
-#   lane :beta do
-#     increment_build_number(xcodeproj: "RnCICD.xcodeproj")
-#     build_app(workspace: "RnCICD.xcworkspace", scheme: "RnCICD")
-#     upload_to_testflight
-#   end
-# end
-
-# This file contains the fastlane.tools configuration
-# You can find the documentation at https://docs.fastlane.tools
-#
-# For a list of all available actions, check out
-#
-#     https://docs.fastlane.tools/actions
-#
-# For a list of all available plugins, check out
-#
-#     https://docs.fastlane.tools/plugins/available-plugins
-#
-
-# Uncomment the line if you want fastlane to automatically update itself
-# update_fastlane
 default_platform(:ios)
 
 platform :ios do
   desc "Push a new beta build to TestFlight"
   lane :beta do
+    
+    ENV["FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD"] = `security find-generic-password -w -a "shiv.tiwari@validusfintech.com" -s "FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD"`.strip
+
     # Sync certificates and provisioning profiles using match
     match(
-      type: "appstore",            # For App Store distribution
-      readonly: false              # Allow Fastlane to create new profiles if needed
+      type: "appstore",                   # For App Store distribution
+      readonly: false,                    # Allow Fastlane to create new profiles if needed
+      app_identifier: "com.validusfintech.RnCICD", # Replace with your App ID
+      team_id: "7BJAJP6YCF"               # Replace with your actual Team ID
     )
-    
+
     # Increment the build number
     increment_build_number(
       xcodeproj: "RnCICD.xcodeproj"
     )
-    
+
     # Build the app using the Release configuration
     build_app(
       workspace: "RnCICD.xcworkspace",
       scheme: "RnCICD",
-      export_method: "app-store"   # Ensure it's set for App Store/TestFlight distribution
+      export_method: "app-store",         # Required for TestFlight/App Store uploads
+      export_options: {
+        provisioningProfiles: {
+          "com.validusfintech.RnCICD" => "match AppStore com.validusfintech.RnCICD"
+        }
+      },
+      output_directory: "./builds",
+      clean: true                         # Perform a clean build
     )
-    
+
     # Upload the build to TestFlight
-    upload_to_testflight
+    upload_to_testflight(
+      skip_waiting_for_build_processing: true, # Optional
+      verbose: true
+    )
+
   end
 end
