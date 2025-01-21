@@ -47,7 +47,6 @@
 #
 #     https://docs.fastlane.tools/plugins/available-plugins
 #
-
 default_platform(:android)
 
 platform :android do
@@ -58,27 +57,26 @@ platform :android do
 
   desc "Submit a new Beta Build to Play Store"
   lane :beta do
-    # Prompt the user for signing store and alias key passwords
-    store_password = prompt(text: "Signing Store Password: ", secure_text: true)
-    key_password = prompt(text: "Alias Key Password: ", secure_text: true)
+    # Hardcoded credentials for the keystore
+    releaseFilePath = "/Users/shivtiwari/keystores\:upload-keystore.jks"
+    store_password = "Shiv.123@t"
+    key_alias = "upload"
+    key_password = "Shiv.123@t"
 
-    # Path to the signing key
-    releaseFilePath = File.join(Dir.pwd, "my-release-key.keystore")
-
-    # Clean and build the app, injecting signing configuration at runtime
+    # Clean and build the app with signing credentials
     gradle(task: 'clean')
     gradle(
-      task: 'assemble',
+      task: 'bundle',
       build_type: 'Release',
       properties: {
         "android.injected.signing.store.file" => releaseFilePath,
         "android.injected.signing.store.password" => store_password,
-        "android.injected.signing.key.alias" => "my-key-alias",
+        "android.injected.signing.key.alias" => key_alias,
         "android.injected.signing.key.password" => key_password
       }
     )
 
-    # Upload the APK to the Play Store (internal testing)
+    # Upload the AAB to the Play Store (internal testing)
     upload_to_play_store(
       track: 'internal'
     )
@@ -86,7 +84,7 @@ platform :android do
 
   desc "Deploy a new version to the Google Play"
   lane :deploy do
-    gradle(task: "clean assembleRelease")
+    gradle(task: "clean bundleRelease")
     upload_to_play_store
   end
 end
