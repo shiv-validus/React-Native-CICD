@@ -1,4 +1,4 @@
-package com.rncicd
+package com.mobile.shiv.rncicd
 
 import android.app.Application
 import com.facebook.react.PackageList

@@ -1,4 +1,4 @@
-package com.rncicd
+package com.mobile.shiv.rncicd
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
