@@ -82,8 +82,8 @@ android {
         applicationId "com.mobile.shiv.rncicd"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 2
-        versionName "1.0.1"
+        versionCode 3
+        versionName "1.0.3"
     }
     signingConfigs {
         debug {
@@ -93,10 +93,10 @@ android {
             keyPassword 'android'
         }
         release {
-            storeFile file("/Users/shivtiwari/keystores:upload-keystore.jks") // Path to your keystore file
-            storePassword "Shiv.123@t" // Replace with your keystore password
-            keyAlias "upload" // Replace with your key alias
-            keyPassword "Shiv.123@t" // Replace with your key password
+            storeFile file(MYAPP_STORE_FILE)
+            storePassword MYAPP_STORE_PASSWORD
+            keyAlias MYAPP_KEY_ALIAS
+            keyPassword MYAPP_KEY_PASSWORD
         }
     }
     buildTypes {

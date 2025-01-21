@@ -8,7 +8,7 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "android:clean": "rm -rf android/.gradle android/build android/app/build && cd android && ./gradlew clean"
+    "android:clean": "rm -rf android/app/release android/.gradle android/build android/app/build && cd android && ./gradlew clean"
   },
   "dependencies": {
     "react": "18.3.1",
