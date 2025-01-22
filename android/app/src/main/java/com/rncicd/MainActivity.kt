@@ -1,4 +1,4 @@
-package com.rncicd
+package com.validus.mobile.android.cicd
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

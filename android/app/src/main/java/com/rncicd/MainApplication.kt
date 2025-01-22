@@ -1,4 +1,4 @@
-package com.rncicd
+package com.validus.mobile.android.cicd
 
 import android.app.Application
 import com.facebook.react.PackageList
