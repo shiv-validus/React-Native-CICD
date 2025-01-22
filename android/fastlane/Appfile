@@ -1,2 +1,2 @@
-json_key_file("/Users/shivtiwari/Documents/android-cicd-448419-50de823cf12c.json") # Path to the json secret file - Follow https://docs.fastlane.tools/actions/supply/#setup to get one
+json_key_file("/Users/shiv/ServiceAccounts/validus-mobile-cicd-eb74857088f9.json") # Path to the json secret file - Follow https://docs.fastlane.tools/actions/supply/#setup to get one
 package_name("com.validus.mobile.android.cicd") # e.g. com.krausefx.app
