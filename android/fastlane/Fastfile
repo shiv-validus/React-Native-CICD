@@ -1,78 +1,36 @@
-# # This file contains the fastlane.tools configuration
-# # You can find the documentation at https://docs.fastlane.tools
-# #
-# # For a list of all available actions, check out
-# #
-# #     https://docs.fastlane.tools/actions
-# #
-# # For a list of all available plugins, check out
-# #
-# #     https://docs.fastlane.tools/plugins/available-plugins
-# #
+require 'dotenv'
 
-# # Uncomment the line if you want fastlane to automatically update itself
-# # update_fastlane
-
-# default_platform(:android)
-
-# platform :android do
-#   desc "Runs all the tests"
-#   lane :test do
-#     gradle(task: "test")
-#   end
-
-#   desc "Submit a new Beta Build to Crashlytics Beta"
-#   lane :beta do
-#     gradle(task: "clean assembleRelease")
-#     crashlytics
-  
-#     # sh "your_script.sh"
-#     # You can also use other beta testing services here
-#   end
-
-#   desc "Deploy a new version to the Google Play"
-#   lane :deploy do
-#     gradle(task: "clean assembleRelease")
-#     upload_to_play_store
-#   end
-# end
-# This file contains the fastlane.tools configuration
-# You can find the documentation at https://docs.fastlane.tools
-#
-# For a list of all available actions, check out
-#
-#     https://docs.fastlane.tools/actions
-#
-# For a list of all available plugins, check out
-#
-#     https://docs.fastlane.tools/plugins/available-plugins
-#
 default_platform(:android)
 
 platform :android do
-  desc "Runs all the tests"
-  lane :test do
-    gradle(task: "test")
-  end
-
   desc "Submit a new Beta Build to Play Store"
   lane :beta do
-    # Hardcoded credentials for the keystore
-    releaseFilePath = "/Users/shiv/keystores/upload-keystore.jks"
-    store_password = "Validus.2025@a"
-    key_alias = "upload"
-    key_password = "Validus.2025@a"
+    # Prompt user to select the environment
+    env = UI.select("Which environment do you want to use?", ["development", "staging", "production"])
+    UI.message("You selected environment: #{env}")
+    
+    # Define the .env file path
+    env_file_path = ".env.#{env}"
 
-    # Clean and build the app with signing credentials
+    # Check if the .env file exists
+    unless File.exist?(env_file_path)
+      UI.user_error!("Environment file not found: #{env_file_path}. Please make sure it exists.")
+    end
+
+    # Load the .env file
+    Dotenv.load(env_file_path)
+    UI.message("Loaded environment variables from #{env_file_path}")
+
+    # Run the gradle build
     gradle(task: 'clean')
     gradle(
       task: 'bundle',
       build_type: 'Release',
       properties: {
-        "android.injected.signing.store.file" => releaseFilePath,
-        "android.injected.signing.store.password" => store_password,
-        "android.injected.signing.key.alias" => key_alias,
-        "android.injected.signing.key.password" => key_password
+        "android.injected.signing.store.file" => ENV['MYAPP_STORE_FILE'],
+        "android.injected.signing.store.password" => ENV['MYAPP_STORE_PASSWORD'],
+        "android.injected.signing.key.alias" => ENV['MYAPP_KEY_ALIAS'],
+        "android.injected.signing.key.password" => ENV['MYAPP_KEY_PASSWORD']
       }
     )
 
@@ -85,12 +43,11 @@ platform :android do
   desc "Deploy a new version to the Google Play"
   lane :deploy do
     gradle(task: "clean bundleRelease")
-    # upload_to_play_store
     upload_to_play_store(
-     track: 'internal',
-     skip_upload_metadata: true, # Skips metadata upload
-     skip_upload_images: true,  # Skips image upload
-     skip_upload_screenshots: true # Skips screenshot upload
-   )
+      track: 'internal',
+      skip_upload_metadata: true, # Skips metadata upload
+      skip_upload_images: true,  # Skips image upload
+      skip_upload_screenshots: true # Skips screenshot upload
+    )
   end
 end
