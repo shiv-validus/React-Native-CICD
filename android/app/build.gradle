@@ -82,8 +82,8 @@ android {
         applicationId "com.validus.mobile.android.cicd"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 7
-        versionName "1.0.7"
+        versionCode 9
+        versionName "1.0.9"
     }
     signingConfigs {
         debug {

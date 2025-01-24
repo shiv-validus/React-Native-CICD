@@ -63,13 +63,6 @@ const CelebrationScreen: React.FC = () => {
           loop
           style={styles.animation}
         />
-        <Text style={getTextStyle()}>
-          Congratulations!
-        </Text>
-
-        <Text style={getDetailedTextStyle()}>
-          Your CI/CD pipeline is ready and running smoothly. Start deploying with confidence!
-        </Text>
       </View>
     </SafeAreaView>
   );
